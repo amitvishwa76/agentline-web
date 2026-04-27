@@ -23,6 +23,7 @@ export const INBOUND_DISPLAY = {
 // SECTION 2 — OUTBOUND / CAMPAIGN DISPLAY RULES
 // ─────────────────────────────────────────────────────────────────
 export const OUTBOUND_DISPLAY = {
+  showCallerNumber:  false,  // show phone number on outbound calls (calling list + campaign)
   showCampaignName:  true,   // show campaign name below caller name
   showAttemptCount:  true,   // show "Attempt 2" pill
   showPreviewNotes:  true,   // show notes input on preview

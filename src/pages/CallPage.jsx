@@ -19,7 +19,7 @@ import {
 import { updateContactAfterCall } from '../services/supabase.js'
 import ScreenPopCard from '../components/ScreenPopCard.jsx'
 import WrapupModal from '../components/WrapupModal.jsx'
-import { NOISE_EXACT, NOISE_PREFIXES, NOISE_SUBSTRINGS } from '../config/screenPopConfig.js'
+import { NOISE_EXACT, NOISE_PREFIXES, NOISE_SUBSTRINGS, INBOUND_DISPLAY, OUTBOUND_DISPLAY } from '../config/screenPopConfig.js'
 
 function isNoisy(key) {
   const k = key.toLowerCase()
@@ -198,15 +198,22 @@ export default function CallPage() {
   const commId   = call?.id   // communication ID for disconnect
 
   const customerP  = convo?.participants?.find(p => p.purpose === 'customer')
-  const rawName = customerP?.name || ''
-  // For calling list outbound calls, name is stored in sessionStorage
+  const rawName    = customerP?.name || ''
   const sessionName = sessionStorage.getItem('callingListContactName') || ''
-  // Suppress phone numbers — prefer contact list data, session name, then participant name
+
+  // Resolve caller name respecting config flags for each call type
   const callerName = isOutbound
-    ? (screenPop.customerName || sessionName || (!isPhoneNumber(rawName) && rawName) || 'Unknown')
+    ? (screenPop.customerName || sessionName ||
+        (OUTBOUND_DISPLAY.showCallerNumber ? rawName : (!isPhoneNumber(rawName) && rawName)) ||
+        'Unknown')
     : (isPhoneNumber(rawName)
-        ? (screenPop.customerName || 'Unknown Caller')
+        ? (INBOUND_DISPLAY.showCallerNumber ? rawName : (screenPop.customerName || 'Unknown Caller'))
         : (rawName || screenPop.customerName || 'Unknown Caller'))
+
+  // Phone number to display when showCallerNumber is enabled
+  const phoneDisplay = isOutbound
+    ? (OUTBOUND_DISPLAY.showCallerNumber ? (customerP?.address || rawName || '') : '')
+    : (INBOUND_DISPLAY.showCallerNumber && isPhoneNumber(rawName) ? rawName : '')
 
   const acdP      = convo?.participants?.find(p => p.purpose === 'acd')
   const queueName = acdP?.queueName || ''
@@ -337,6 +344,11 @@ export default function CallPage() {
         </div>
         <div className="text-xl md:text-2xl font-semibold mb-2">{callerName}</div>
 
+        {phoneDisplay && (
+          <div className="text-sm font-mono mb-2" style={{ color: 'var(--text-secondary)' }}>
+            {phoneDisplay}
+          </div>
+        )}
         {(queueName || wrapupContext) && (
           <span className="badge text-xs px-2.5 py-1"
             style={{ background: 'rgba(99,153,255,0.12)', color: 'var(--primary)', border: '1px solid rgba(99,153,255,0.25)' }}>

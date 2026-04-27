@@ -46,7 +46,9 @@ export default function IncomingCallAlert({ conversation, onRefresh }) {
         }
 
         const resolvedName = isPhoneNumber(rawName)
-          ? (allRawAttrs.customerName || allRawAttrs.CustomerName || allRawAttrs.Firstname || 'Unknown Caller')
+          ? (INBOUND_DISPLAY.showCallerNumber
+              ? rawName
+              : (allRawAttrs.customerName || allRawAttrs.CustomerName || allRawAttrs.Firstname || 'Unknown Caller'))
           : (rawName || 'Unknown Caller')
         setCallerName(resolvedName)
 
