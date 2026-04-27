@@ -72,6 +72,7 @@ export default function CallingListPage() {
       if (result?.id) {
         // Store contact ID so CallPage can write back to JSONBin after wrapup
         sessionStorage.setItem('callingListContactId', contact.id)
+        sessionStorage.setItem('callingListContactName', contact.customer_name || '')
         navigate(`/call/${result.id}`)
       }
     } catch (e) {

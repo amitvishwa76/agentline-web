@@ -199,9 +199,11 @@ export default function CallPage() {
 
   const customerP  = convo?.participants?.find(p => p.purpose === 'customer')
   const rawName = customerP?.name || ''
-  // Match mobile resolveCallerName: prefer contact list data, fall back to participant name
+  // For calling list outbound calls, name is stored in sessionStorage
+  const sessionName = sessionStorage.getItem('callingListContactName') || ''
+  // Suppress phone numbers — prefer contact list data, session name, then participant name
   const callerName = isOutbound
-    ? (screenPop.customerName || (!isPhoneNumber(rawName) && rawName) || 'Unknown')
+    ? (screenPop.customerName || sessionName || (!isPhoneNumber(rawName) && rawName) || 'Unknown')
     : (isPhoneNumber(rawName)
         ? (screenPop.customerName || 'Unknown Caller')
         : (rawName || screenPop.customerName || 'Unknown Caller'))
@@ -276,6 +278,7 @@ export default function CallPage() {
           .then(() => console.log('[Wrapup] JSONBin updated OK'))
           .catch(e => console.error('[Wrapup] JSONBin update failed:', e.message))
         sessionStorage.removeItem('callingListContactId')
+        sessionStorage.removeItem('callingListContactName')
       } else {
         console.log('[Wrapup] no contactId — skipping Supabase update')
       }
@@ -333,11 +336,7 @@ export default function CallPage() {
           {isOutbound ? 'Calling' : 'Caller'}
         </div>
         <div className="text-xl md:text-2xl font-semibold mb-2">{callerName}</div>
-        {isOutbound && customerP?.address && (
-          <div className="text-sm font-mono mb-2" style={{ color: 'var(--text-secondary)' }}>
-            {customerP.address}
-          </div>
-        )}
+
         {(queueName || wrapupContext) && (
           <span className="badge text-xs px-2.5 py-1"
             style={{ background: 'rgba(99,153,255,0.12)', color: 'var(--primary)', border: '1px solid rgba(99,153,255,0.25)' }}>
