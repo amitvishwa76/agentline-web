@@ -10,8 +10,8 @@ export const GENESYS_CONFIG = {
 
   // Redirect URIs — update for production
   redirectUri: import.meta.env.DEV
-    ? 'http://localhost:5173/callback'
-    : 'https://resonant-melomakarona-8c328f.netlify.app/callback',
+  ? 'http://localhost:5173/callback'
+  : `https://${window.location.hostname}/callback`,
 
   scopes: [
     'conversations',
