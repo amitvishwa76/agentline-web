@@ -1,0 +1,167 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0a0f1e;
+  --card: rgba(255, 255, 255, 0.05);
+  --primary: #6399ff;
+  --success: #00c896;
+  --warning: #f5a623;
+  --danger: #ff3b30;
+  --purple: #b48fff;
+  --text: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.4);
+  --border: rgba(255, 255, 255, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+
+/* Animations */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-slide-up { animation: slide-up 0.3s ease forwards; }
+.animate-fade-in { animation: fade-in 0.3s ease forwards; }
+.animate-pulse-ring { animation: pulse-ring 1.5s ease-out infinite; }
+.animate-blink { animation: blink 1.5s ease-in-out infinite; }
+
+/* Glass card */
+.glass {
+  background: var(--card);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Button base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  outline: none;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover { background: #7aaeff; }
+
+.btn-success {
+  background: var(--success);
+  color: #fff;
+}
+.btn-success:hover { background: #00dda8; }
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-danger:hover { background: #ff5c52; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { background: rgba(255,255,255,0.08); }
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* Input */
+.input {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: var(--text);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  font-family: 'IBM Plex Sans', sans-serif;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.input:focus {
+  border-color: var(--primary);
+}
+
+.input::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Toast */
+.toast-enter {
+  animation: slide-up 0.3s ease forwards;
+}
+
+/* Mobile slide-in animation for sidebar drawer */
+@keyframes slide-right {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+.animate-slide-right { animation: slide-right 0.25s ease forwards; }
+
+/* Safe area for notched phones */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* Mobile viewport fix */
+@media (max-width: 768px) {
+  html { height: -webkit-fill-available; }
+  body { min-height: -webkit-fill-available; }
+}
